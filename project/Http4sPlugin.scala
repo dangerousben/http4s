@@ -222,6 +222,7 @@ object Http4sPlugin extends AutoPlugin {
     val logback = "1.2.3"
     val log4s = "1.8.2"
     val mockito = "3.3.3"
+    val monocle = "2.0.5"
     val okhttp = "4.7.2"
     val parboiledHttp4s = "2.0.1"
     val playJson = "2.9.0"
@@ -282,6 +283,9 @@ object Http4sPlugin extends AutoPlugin {
   lazy val log4s                            = "org.log4s"              %% "log4s"                     % V.log4s
   lazy val logbackClassic                   = "ch.qos.logback"         %  "logback-classic"           % V.logback
   lazy val mockito                          = "org.mockito"            %  "mockito-core"              % V.mockito
+  lazy val monocleCore                      = "com.github.julien-truffaut" %%  "monocle-core"         % V.monocle
+  lazy val monocleMacro                     = "com.github.julien-truffaut" %%  "monocle-macro"        % V.monocle
+  lazy val monocleLaw                       = "com.github.julien-truffaut" %%  "monocle-law"          % V.monocle
   lazy val okhttp                           = "com.squareup.okhttp3"   %  "okhttp"                    % V.okhttp
   lazy val playJson                         = "com.typesafe.play"      %% "play-json"                 % V.playJson
   lazy val prometheusClient                 = "io.prometheus"          %  "simpleclient"              % V.prometheusClient

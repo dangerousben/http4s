@@ -622,10 +622,11 @@ private[http4s] trait ArbitraryInstances {
     Cogen[(Short, Short, Short, Short, Short, Short, Short, Short)]
       .contramap(ipv6 => (ipv6.a, ipv6.b, ipv6.c, ipv6.d, ipv6.e, ipv6.f, ipv6.g, ipv6.h))
 
+  implicit val http4sTestingArbitraryForRegName: Arbitrary[Uri.RegName] =
+    Arbitrary(listOf(oneOf(genUnreserved, genPctEncoded, genSubDelims)).map(rn => Uri.RegName(rn.mkString)))
+
   implicit val http4sTestingArbitraryForUriHost: Arbitrary[Uri.Host] = Arbitrary {
-    val genRegName =
-      listOf(oneOf(genUnreserved, genPctEncoded, genSubDelims)).map(rn => Uri.RegName(rn.mkString))
-    oneOf(getArbitrary[Uri.Ipv4Address], getArbitrary[Uri.Ipv6Address], genRegName)
+    oneOf(getArbitrary[Uri.Ipv4Address], getArbitrary[Uri.Ipv6Address], getArbitrary[Uri.RegName])
   }
 
   implicit val http4sTestingArbitraryForUserInfo: Arbitrary[Uri.UserInfo] =

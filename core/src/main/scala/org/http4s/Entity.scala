@@ -6,7 +6,7 @@
 
 package org.http4s
 
-import cats.Monoid
+import cats.{ Eq, Monoid }
 import cats.implicits._
 
 final case class Entity[+F[_]](body: EntityBody[F], length: Option[Long] = None)
@@ -21,4 +21,7 @@ object Entity {
     }
 
   val empty: Entity[Nothing] = Entity[Nothing](EmptyBody, Some(0L))
+
+  implicit def eq[F[_]](implicit cb: Eq[EntityBody[F]]): Eq[Entity[F]] =
+    Eq.instance((a, b) => a.body === b.body && a.length === b.length)
 }

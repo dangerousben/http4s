@@ -35,6 +35,7 @@ lazy val modules: List[ProjectReference] = List(
   json4s,
   json4sNative,
   json4sJackson,
+  monocle,
   playJson,
   scalaXml,
   twirl,
@@ -348,6 +349,17 @@ lazy val json4sJackson = libraryProject("json4s-jackson")
     libraryDependencies += Http4sPlugin.json4sJackson
   )
   .dependsOn(json4s % "compile;test->test")
+
+lazy val monocle = libraryProject("monocle")
+  .settings(
+    description := "Monocle optics for http4s data types",
+    libraryDependencies ++= Seq(
+      monocleCore,
+      monocleMacro,
+      monocleLaw % Test,
+    ),
+  )
+  .dependsOn(core, testing % "test->test")
 
 lazy val playJson = libraryProject("play-json")
   .settings(

@@ -6,7 +6,7 @@
 
 package org.http4s
 
-import cats.{Eval, Foldable}
+import cats.{Eq, Eval, Foldable}
 import cats.implicits._
 import org.http4s.Query._
 import org.http4s.internal.CollectionCompat
@@ -173,4 +173,6 @@ object Query {
       case (m, (k, Seq())) => m :+ (k -> None)
       case (m, (k, vs)) => vs.toList.foldLeft(m) { case (m, v) => m :+ (k -> Some(v)) }
     })
+
+  implicit val eq: Eq[Query] = Eq.by(_.pairs)
 }

@@ -6,7 +6,7 @@
 
 package org.http4s
 
-import cats.{Applicative, Functor, Monad, ~>}
+import cats.{Applicative, Eq, Functor, Monad, ~>}
 import cats.data.NonEmptyList
 import cats.implicits._
 import cats.effect.IO
@@ -507,6 +507,15 @@ object Request {
     val ConnectionInfo: Key[Connection] = Key.newKey[IO, Connection].unsafeRunSync
     val ServerSoftware: Key[ServerSoftware] = Key.newKey[IO, ServerSoftware].unsafeRunSync
   }
+
+  implicit def eq[F[_]](implicit eb: Eq[EntityBody[F]]): Eq[Request[F]] =
+    Eq.instance((a, b) =>
+      a.method === b.method &&
+      a.uri === b.uri &&
+      a.httpVersion === b.httpVersion &&
+      a.headers === b.headers &&
+      a.body === b.body
+    )
 }
 
 /** Representation of the HTTP response to send back to the client
@@ -593,4 +602,13 @@ object Response {
 
   def timeout[F[_]]: Response[F] =
     Response[F](Status.ServiceUnavailable).withEntity("Response timed out")
+
+  implicit def eq[F[_]](implicit eb: Eq[EntityBody[F]]): Eq[Response[F]] =
+    Eq.instance((a, b) =>
+      a.status === b.status &&
+      a.httpVersion === b.httpVersion &&
+      a.headers === b.headers &&
+      a.body === b.body
+    )
+
 }

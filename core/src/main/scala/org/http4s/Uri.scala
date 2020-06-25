@@ -11,7 +11,10 @@
 package org.http4s
 
 import cats.{Eq, Hash, Order, Show}
+import cats.instances.int._
+import cats.instances.option._
 import cats.syntax.either._
+import cats.syntax.eq._
 import org.typelevel.ci.CIString
 import java.net.{Inet4Address, Inet6Address, InetAddress}
 import java.nio.{ByteBuffer, CharBuffer}
@@ -288,6 +291,11 @@ object Uri {
       }
   }
 
+  object Authority {
+    implicit val eq: Eq[Authority] =
+      Eq.instance((a, b) => catsSyntaxEq(a.userInfo) === b.userInfo && a.host === b.host && a.port === b.port)
+  }
+
   final class Path private (
       val segments: Vector[Path.Segment],
       val absolute: Boolean,
@@ -520,6 +528,10 @@ object Uri {
         case a: Ipv6Address => writer << '[' << a << ']'
         case _ => writer
       }
+  }
+
+  object Host {
+    implicit val eq: Eq[Host] = Eq.fromUniversalEquals
   }
 
   @deprecated("Renamed to Ipv4Address, modeled as case class of bytes", "0.21.0-M2")
@@ -799,7 +811,11 @@ object Uri {
     def value: String = host.toString
   }
 
-  object RegName { def apply(name: String): RegName = new RegName(CIString(name)) }
+  object RegName {
+    def apply(name: String): RegName = new RegName(CIString(name))
+
+    implicit val eq: Eq[RegName] = Eq.by(_.host)
+  }
 
   /**
     * Resolve a relative Uri reference, per RFC 3986 sec 5.2
